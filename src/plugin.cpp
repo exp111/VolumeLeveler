@@ -22,6 +22,7 @@
 #include "plugin.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 //#include "config.h"
 #include "QtConfig.h"
 #include "config.h"
@@ -46,6 +47,7 @@ static struct TS3Functions ts3Functions;
 
 //Global Variables
 static char* pluginID = NULL;
+std::string configFile;
 
 #ifdef _WIN32
 /* Helper function to convert wchar_T to Utf-8 encoded strings on Windows */
@@ -98,6 +100,38 @@ void ts3plugin_setFunctionPointers(const struct TS3Functions funcs) {
 	ts3Functions = funcs;
 }
 
+bool file_exists(const LPCSTR file_name)
+{
+	std::ifstream file(file_name);
+	return file.good();
+}
+
+void create_config(const LPCSTR file_name)
+{
+	WritePrivateProfileString("Config", "enabled", "1", file_name);
+	WritePrivateProfileString("Config", "limit", "6000", file_name);
+}
+
+void loadConfig()
+{
+	char enabled[128];
+	char limit[128];
+	GetPrivateProfileString("Config", "enabled", "1", enabled, 128, configFile.c_str());
+	GetPrivateProfileString("Config", "limit", "6000", limit, 128, configFile.c_str());
+
+	config->enabled = std::stoi(enabled);
+	config->limit = std::stoi(limit);
+}
+
+void saveConfig()
+{
+	if (!file_exists(configFile.c_str()))
+		create_config(configFile.c_str());
+
+	WritePrivateProfileString("Config", "enabled", std::to_string(config->enabled).c_str(), configFile.c_str());
+	WritePrivateProfileString("Config", "limit", std::to_string(config->limit).c_str(), configFile.c_str());
+}
+
 int ts3plugin_init() {
 	char appPath[PATH_BUFSIZE];
 	char resourcesPath[PATH_BUFSIZE];
@@ -109,10 +143,14 @@ int ts3plugin_init() {
 	ts3Functions.getConfigPath(configPath, PATH_BUFSIZE);
 	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
+	configFile = std::string(configPath) + "plugins/VolumeLeveler/config.ini";
+	loadConfig();
 	return 0;
 }
 
 void ts3plugin_shutdown() {
+	saveConfig();
+
 	if (pluginID) {
 		free(pluginID);
 		pluginID = NULL;
