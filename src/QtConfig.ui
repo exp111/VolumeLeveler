@@ -155,7 +155,7 @@
    <sender>limitSlider</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QtConfig</receiver>
-   <slot>updateLimitLabel()</slot>
+   <slot>updateLimitLabel(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>139</x>
@@ -170,6 +170,6 @@
  </connections>
  <slots>
   <slot>saveToConfig()</slot>
-  <slot>updateLimitLabel()</slot>
+  <slot>updateLimitLabel(int)</slot>
  </slots>
 </ui>

@@ -13,7 +13,7 @@ public:
 	~QtConfig();
 public slots:
 	void saveToConfig();
-	void updateLimitLabel();
+	void updateLimitLabel(int);
 private:
 	Ui::QtConfig ui;
 };

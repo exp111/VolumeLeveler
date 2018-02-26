@@ -1,13 +1,14 @@
 #include "QtConfig.h"
 
 #include "config.h"
+#include "db.h"
 
 QtConfig::QtConfig(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	ui.enableBox->setChecked(config->enabled);
-	ui.limitLabel->setText(QString(std::to_string(config->limit).c_str()));
+	updateLimitLabel(config->limit);
 	ui.limitSlider->setValue(config->limit);
 }
 
@@ -15,9 +16,9 @@ QtConfig::~QtConfig()
 {
 }
 
-void QtConfig::updateLimitLabel()
+void QtConfig::updateLimitLabel(int value)
 {
-	ui.limitLabel->setText(QString(std::to_string(ui.limitSlider->value()).c_str()));
+	ui.limitLabel->setText(QString(std::to_string(lin2db(value)).c_str()));
 }
 
 void QtConfig::saveToConfig()

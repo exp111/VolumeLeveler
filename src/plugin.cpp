@@ -26,6 +26,7 @@
 //#include "config.h"
 #include "QtConfig.h"
 #include "config.h"
+#include "db.h"
 
 static struct TS3Functions ts3Functions;
 
@@ -279,7 +280,30 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 	if (!config->enabled)
 		return;
 
-	for (int i = 0; i < sampleCount; i++)
+	int count = sampleCount * channels;
+
+	/*//Get highest sample
+	int highestSample = 0;
+	for (int i = 0; i < count; i++)
+	{
+		if (abs(samples[i]) > highestSample)
+			highestSample = abs(samples[i]);
+	}
+
+	//If we're not over the limit we don't need to change anything
+	if (highestSample <= config->limit)
+		return;
+
+	//Get the difference between highest and limit for proper scaling
+	int diff = highestSample - config->limit;
+
+	//Clamp
+	for (int i = 0; i < count; i++)
+	{
+		samples[i] -= samples[i] > 0 ? diff : -diff;
+	}*/
+
+	for (int i = 0; i < count; i++)
 	{
 		if (samples[i] > config->limit)
 		{

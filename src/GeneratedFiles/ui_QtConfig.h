@@ -63,7 +63,7 @@ public:
         QObject::connect(pushButton, SIGNAL(clicked()), QtConfig, SLOT(saveToConfig()));
         QObject::connect(pushButton_2, SIGNAL(clicked()), QtConfig, SLOT(close()));
         QObject::connect(pushButton, SIGNAL(clicked()), QtConfig, SLOT(close()));
-        QObject::connect(limitSlider, SIGNAL(valueChanged(int)), QtConfig, SLOT(updateLimitLabel()));
+        QObject::connect(limitSlider, SIGNAL(valueChanged(int)), QtConfig, SLOT(updateLimitLabel(int)));
 
         QMetaObject::connectSlotsByName(QtConfig);
     } // setupUi

@@ -156,6 +156,7 @@
     <ClInclude Include="..\include\teamspeak\public_rare_definitions.h" />
     <ClInclude Include="..\include\ts3_functions.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="db.h" />
     <ClInclude Include="GeneratedFiles\ui_QtConfig.h" />
     <ClInclude Include="plugin.h" />
     <CustomBuild Include="QtConfig.h">
