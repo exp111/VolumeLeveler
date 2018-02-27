@@ -30,6 +30,12 @@ void QtConfig::cancel()
 	config->limit = backupLimit;
 }
 
+void QtConfig::updateLimit(int value)
+{
+	config->limit = value;
+	ui.limitSlider->setValue(value);
+}
+
 void QtConfig::saveToConfig()
 {
 	config->enabled = ui.enableBox->isChecked();
