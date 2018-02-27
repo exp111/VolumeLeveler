@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Test Plugin</string>
+   <string>Volume Leveler</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="acepptButton">
    <property name="geometry">
     <rect>
      <x>24</x>
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Annehmen</string>
+    <string>Accept</string>
    </property>
    <property name="checkable">
     <bool>false</bool>
@@ -48,7 +48,7 @@
     <string>Enable</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
      <x>150</x>
@@ -58,7 +58,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Abbrechen</string>
+    <string>Cancel</string>
    </property>
   </widget>
   <widget class="QSlider" name="limitSlider">
@@ -83,20 +83,20 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="limitLabel">
+  <widget class="QSpinBox" name="limitBox">
    <property name="geometry">
     <rect>
-     <x>16</x>
+     <x>91</x>
      <y>60</y>
-     <width>251</width>
-     <height>20</height>
+     <width>91</width>
+     <height>22</height>
     </rect>
    </property>
-   <property name="text">
-    <string>limit</string>
+   <property name="maximum">
+    <number>20000</number>
    </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
+   <property name="singleStep">
+    <number>10</number>
    </property>
   </widget>
  </widget>
@@ -104,7 +104,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
+   <sender>acepptButton</sender>
    <signal>clicked()</signal>
    <receiver>QtConfig</receiver>
    <slot>saveToConfig()</slot>
@@ -120,7 +120,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_2</sender>
+   <sender>cancelButton</sender>
    <signal>clicked()</signal>
    <receiver>QtConfig</receiver>
    <slot>close()</slot>
@@ -136,7 +136,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>acepptButton</sender>
    <signal>clicked()</signal>
    <receiver>QtConfig</receiver>
    <slot>close()</slot>
@@ -167,9 +167,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>QtConfig</receiver>
+   <slot>cancel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>84</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>saveToConfig()</slot>
   <slot>updateLimitLabel(int)</slot>
+  <slot>cancel()</slot>
  </slots>
 </ui>

@@ -69,6 +69,9 @@
     <ClInclude Include="db.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_debug.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="plugin.cpp">
@@ -92,6 +95,9 @@
       <Filter>ui</Filter>
     </CustomBuild>
     <CustomBuild Include="QtConfig.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="debug.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>

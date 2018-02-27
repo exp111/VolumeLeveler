@@ -14,6 +14,8 @@ public:
 public slots:
 	void saveToConfig();
 	void updateLimitLabel(int);
+	void cancel();
 private:
+	int backupLimit = 0;
 	Ui::QtConfig ui;
 };

@@ -10,6 +10,7 @@ QtConfig::QtConfig(QWidget *parent)
 	ui.enableBox->setChecked(config->enabled);
 	updateLimitLabel(config->limit);
 	ui.limitSlider->setValue(config->limit);
+	backupLimit = config->limit;
 }
 
 QtConfig::~QtConfig()
@@ -18,7 +19,15 @@ QtConfig::~QtConfig()
 
 void QtConfig::updateLimitLabel(int value)
 {
-	ui.limitLabel->setText(QString(std::to_string(lin2db(value)).c_str()));
+	config->limit = value;
+	ui.limitBox->setValue(value);
+	//ui.limitBox->setValue(lin2db(value));
+	//ui.limitBox->(QString(std::to_string().c_str()));
+}
+
+void QtConfig::cancel()
+{
+	config->limit = backupLimit;
 }
 
 void QtConfig::saveToConfig()
