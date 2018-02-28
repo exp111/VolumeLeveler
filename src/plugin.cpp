@@ -296,12 +296,12 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 	return;
 
 	//Get the difference between highest and limit for proper scaling
-	double diff = config->limit / highestSample;
+	double diff = ((double)highestSample / config->limit);
 
 	//Clamp
 	for (int i = 0; i < count; i++)
 	{
-		samples[i] *= diff;
+		samples[i] /= diff;
 	}
 
 	//shitty compression
