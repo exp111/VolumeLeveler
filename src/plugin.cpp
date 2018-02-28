@@ -282,28 +282,30 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 
 	int count = sampleCount * channels;
 
-	/*//Get highest sample
+	//scaling percentage
+	//Get highest sample
 	int highestSample = 0;
 	for (int i = 0; i < count; i++)
 	{
-		if (abs(samples[i]) > highestSample)
-			highestSample = abs(samples[i]);
+	if (abs(samples[i]) > highestSample)
+	highestSample = abs(samples[i]);
 	}
 
 	//If we're not over the limit we don't need to change anything
 	if (highestSample <= config->limit)
-		return;
+	return;
 
 	//Get the difference between highest and limit for proper scaling
-	int diff = highestSample - config->limit;
+	double diff = config->limit / highestSample;
 
 	//Clamp
 	for (int i = 0; i < count; i++)
 	{
-		samples[i] -= samples[i] > 0 ? diff : -diff;
-	}*/
+		samples[i] *= diff;
+	}
 
-	for (int i = 0; i < count; i++)
+	//shitty compression
+	/*for (int i = 0; i < count; i++)
 	{
 		if (samples[i] > config->limit)
 		{
@@ -313,5 +315,5 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 		{
 			samples[i] = -config->limit;
 		}
-	}
+	}*/
 }
