@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>284</width>
-    <height>170</height>
+    <height>223</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="acepptButton">
    <property name="geometry">
     <rect>
-     <x>24</x>
-     <y>140</y>
+     <x>20</x>
+     <y>190</y>
      <width>101</width>
      <height>23</height>
     </rect>
@@ -51,8 +51,8 @@
   <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>140</y>
+     <x>160</x>
+     <y>190</y>
      <width>101</width>
      <height>23</height>
     </rect>
@@ -97,6 +97,61 @@
    </property>
    <property name="singleStep">
     <number>10</number>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="actionCombo">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>121</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Do nothing</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Mute</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Kick from Channel</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Kick from Server</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Ban from Server</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLineEdit" name="actionReasonLine">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>160</y>
+     <width>241</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="banDurationBox">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>130</y>
+     <width>101</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
  </widget>

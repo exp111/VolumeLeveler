@@ -111,17 +111,29 @@ void create_config(const LPCSTR file_name)
 {
 	WritePrivateProfileString("Config", "enabled", "1", file_name);
 	WritePrivateProfileString("Config", "limit", "6000", file_name);
+	WritePrivateProfileString("Config", "action", "-1", file_name);
+	WritePrivateProfileString("Config", "banDuration", "10", file_name);
+	WritePrivateProfileString("Config", "actionReason", "You're too loud!", file_name);
 }
 
 void loadConfig()
 {
 	char enabled[128];
 	char limit[128];
+	char action[128];
+	char banDuration[128];
+	char actionReason[128];
 	GetPrivateProfileString("Config", "enabled", "1", enabled, 128, configFile.c_str());
 	GetPrivateProfileString("Config", "limit", "6000", limit, 128, configFile.c_str());
+	GetPrivateProfileString("Config", "action", "-1", action, 128, configFile.c_str());
+	GetPrivateProfileString("Config", "banDuration", "10", banDuration, 128, configFile.c_str());
+	GetPrivateProfileString("Config", "actionReason", "You're too loud!", actionReason, 128, configFile.c_str());
 
 	config->enabled = std::stoi(enabled);
 	config->limit = std::stoi(limit);
+	config->actionOnLevelExceeded = std::stoi(action);
+	config->banDuration = std::stoi(banDuration);
+	config->actionReason = std::string(actionReason);
 }
 
 void saveConfig()
@@ -131,6 +143,9 @@ void saveConfig()
 
 	WritePrivateProfileString("Config", "enabled", std::to_string(config->enabled).c_str(), configFile.c_str());
 	WritePrivateProfileString("Config", "limit", std::to_string(config->limit).c_str(), configFile.c_str());
+	WritePrivateProfileString("Config", "action", std::to_string(config->actionOnLevelExceeded).c_str(), configFile.c_str());
+	WritePrivateProfileString("Config", "banDuration", std::to_string(config->banDuration).c_str(), configFile.c_str());
+	WritePrivateProfileString("Config", "actionReason", config->actionReason.c_str(), configFile.c_str());
 }
 
 int ts3plugin_init() {
@@ -258,11 +273,6 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 	}
 }
 
-void ts3plugin_onConnectStatusChangeEvent(uint64 serverConnectionHandlerID, int newStatus, unsigned int errorNumber)
-{
-
-}
-
 const char* ts3plugin_keyDeviceName(const char* keyIdentifier) {
 	return NULL;
 }
@@ -287,13 +297,13 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 	int highestSample = 0;
 	for (int i = 0; i < count; i++)
 	{
-	if (abs(samples[i]) > highestSample)
-	highestSample = abs(samples[i]);
+		if (abs(samples[i]) > highestSample)
+			highestSample = abs(samples[i]);
 	}
 
 	//If we're not over the limit we don't need to change anything
 	if (highestSample <= config->limit)
-	return;
+		return;
 
 	//Get the difference between highest and limit for proper scaling
 	double diff = ((double)highestSample / config->limit);
@@ -304,16 +314,32 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 		samples[i] /= diff;
 	}
 
-	//shitty compression
-	/*for (int i = 0; i < count; i++)
+	//Action on Level Exceeded
+	switch (config->actionOnLevelExceeded)
 	{
-		if (samples[i] > config->limit)
-		{
-			samples[i] = config->limit;
-		}
-		else if (-samples[i] > config->limit)
-		{
-			samples[i] = -config->limit;
-		}
-	}*/
+	case config->ACTIONS::NONE:
+	default:
+		break;
+	case config->ACTIONS::MUTE:
+	{
+		int isMuted = 0;
+		ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, clientID, CLIENT_IS_MUTED, &isMuted);
+
+		if (isMuted)
+			break;
+
+		anyID clientArray[1] = { clientID };
+		ts3Functions.requestMuteClients(serverConnectionHandlerID, clientArray, NULL);
+		break;
+	}
+	case config->ACTIONS::KICK_CHANNEL:
+		ts3Functions.requestClientKickFromChannel(serverConnectionHandlerID, clientID, config->actionReason.c_str(), NULL);
+		break;
+	case config->ACTIONS::KICK_SERVER:
+		ts3Functions.requestClientKickFromServer(serverConnectionHandlerID, clientID, config->actionReason.c_str(), NULL);
+		break;
+	case config->ACTIONS::BAN:
+		ts3Functions.banclient(serverConnectionHandlerID, clientID, config->banDuration, config->actionReason.c_str(), NULL);
+		break;
+	}
 }

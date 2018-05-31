@@ -11,6 +11,9 @@ QtConfig::QtConfig(QWidget *parent)
 	updateLimitLabel(config->limit);
 	ui.limitSlider->setValue(config->limit);
 	backupLimit = config->limit;
+	ui.actionReasonLine->setText(QString::fromStdString(config->actionReason));
+	ui.actionCombo->setCurrentIndex(config->actionOnLevelExceeded);
+	ui.banDurationBox->setValue(config->banDuration);
 }
 
 QtConfig::~QtConfig()
@@ -40,4 +43,7 @@ void QtConfig::saveToConfig()
 {
 	config->enabled = ui.enableBox->isChecked();
 	config->limit = ui.limitSlider->value();
+	config->actionOnLevelExceeded = ui.actionCombo->currentIndex();
+	config->banDuration = ui.banDurationBox->value();
+	config->actionReason = ui.actionReasonLine->text().toStdString();
 }
