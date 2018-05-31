@@ -21,7 +21,7 @@ public:
 	int actionOnLevelExceeded = -1;
 	//0 for permanent; else temporary
 	int banDuration = 10;
-	std::string actionReason = "You're too loud!";
+	std::string actionReason = "Your loudest sample was at {level} while the treshold is at {limit}!";
 };
 
 extern Config* config;

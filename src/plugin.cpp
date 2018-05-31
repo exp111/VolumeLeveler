@@ -23,6 +23,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <regex>
 //#include "config.h"
 #include "QtConfig.h"
 #include "config.h"
@@ -285,6 +286,15 @@ const char* ts3plugin_keyPrefix() {
 	return NULL;
 }
 
+void ReplaceString(std::string& subject, const std::string& search,
+	const std::string& replace) {
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos) {
+		subject.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+}
+
 void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, anyID clientID, short * samples, int sampleCount, int channels)
 {
 	if (!config->enabled)
@@ -314,6 +324,15 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 		samples[i] /= diff;
 	}
 
+	//Do the message stuff
+	std::string kickReason = config->actionReason;
+	ReplaceString(kickReason, std::string("{level}"), std::to_string(highestSample));
+	ReplaceString(kickReason, std::string("{limit}"), std::to_string(config->limit));
+
+	//Log cuz maybe wants this as an api or smth
+	std::string logMessage = std::to_string(clientID) + ";" + std::to_string(highestSample); //we could use sprintf but im too lazy to allocate memory and stuff so use dynamic structures
+	ts3Functions.logMessage(logMessage.c_str(), LogLevel_DEBUG, "VolumeLeveler", serverConnectionHandlerID);
+
 	//Action on Level Exceeded
 	switch (config->actionOnLevelExceeded)
 	{
@@ -333,13 +352,13 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 		break;
 	}
 	case config->ACTIONS::KICK_CHANNEL:
-		ts3Functions.requestClientKickFromChannel(serverConnectionHandlerID, clientID, config->actionReason.c_str(), NULL);
+		ts3Functions.requestClientKickFromChannel(serverConnectionHandlerID, clientID, kickReason.c_str(), NULL);
 		break;
 	case config->ACTIONS::KICK_SERVER:
-		ts3Functions.requestClientKickFromServer(serverConnectionHandlerID, clientID, config->actionReason.c_str(), NULL);
+		ts3Functions.requestClientKickFromServer(serverConnectionHandlerID, clientID, kickReason.c_str(), NULL);
 		break;
 	case config->ACTIONS::BAN:
-		ts3Functions.banclient(serverConnectionHandlerID, clientID, config->banDuration, config->actionReason.c_str(), NULL);
+		ts3Functions.banclient(serverConnectionHandlerID, clientID, config->banDuration, kickReason.c_str(), NULL);
 		break;
 	}
 }
