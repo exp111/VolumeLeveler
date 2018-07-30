@@ -10,6 +10,8 @@ public:
 	bool enabled = true;
 	int limit = 6000;
 
+	bool enableLog = true;
+
 	enum ACTIONS
 	{
 		NONE = 0,

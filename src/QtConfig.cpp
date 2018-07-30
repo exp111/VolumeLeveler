@@ -14,6 +14,7 @@ QtConfig::QtConfig(QWidget *parent)
 	ui.actionReasonLine->setText(QString::fromStdString(config->actionReason));
 	ui.actionCombo->setCurrentIndex(config->actionOnLevelExceeded);
 	ui.banDurationBox->setValue(config->banDuration);
+	ui.enableLogBox->setChecked(config->enableLog);
 }
 
 QtConfig::~QtConfig()
@@ -46,4 +47,5 @@ void QtConfig::saveToConfig()
 	config->actionOnLevelExceeded = ui.actionCombo->currentIndex();
 	config->banDuration = ui.banDurationBox->value();
 	config->actionReason = ui.actionReasonLine->text().toStdString();
+	config->enableLog = ui.enableLogBox->isChecked();
 }

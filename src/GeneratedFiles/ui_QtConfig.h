@@ -35,6 +35,7 @@ public:
     QComboBox *actionCombo;
     QLineEdit *actionReasonLine;
     QSpinBox *banDurationBox;
+    QCheckBox *enableLogBox;
 
     void setupUi(QWidget *QtConfig)
     {
@@ -73,6 +74,9 @@ public:
         banDurationBox = new QSpinBox(QtConfig);
         banDurationBox->setObjectName(QStringLiteral("banDurationBox"));
         banDurationBox->setGeometry(QRect(160, 130, 101, 22));
+        enableLogBox = new QCheckBox(QtConfig);
+        enableLogBox->setObjectName(QStringLiteral("enableLogBox"));
+        enableLogBox->setGeometry(QRect(190, 20, 70, 17));
 
         retranslateUi(QtConfig);
         QObject::connect(acepptButton, SIGNAL(clicked()), QtConfig, SLOT(saveToConfig()));
@@ -102,6 +106,7 @@ public:
          << QApplication::translate("QtConfig", "Kick from Server", Q_NULLPTR)
          << QApplication::translate("QtConfig", "Ban from Server", Q_NULLPTR)
         );
+        enableLogBox->setText(QApplication::translate("QtConfig", "Log", Q_NULLPTR));
     } // retranslateUi
 
 };

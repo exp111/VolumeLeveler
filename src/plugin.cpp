@@ -124,17 +124,20 @@ void loadConfig()
 	char action[128];
 	char banDuration[128];
 	char actionReason[128];
+	char enableLog[128];
 	GetPrivateProfileString("Config", "enabled", "1", enabled, 128, configFile.c_str());
 	GetPrivateProfileString("Config", "limit", "6000", limit, 128, configFile.c_str());
 	GetPrivateProfileString("Config", "action", "-1", action, 128, configFile.c_str());
 	GetPrivateProfileString("Config", "banDuration", "10", banDuration, 128, configFile.c_str());
 	GetPrivateProfileString("Config", "actionReason", "You're too loud!", actionReason, 128, configFile.c_str());
+	GetPrivateProfileString("Config", "enableLog", "1", enableLog, 128, configFile.c_str());
 
 	config->enabled = std::stoi(enabled);
 	config->limit = std::stoi(limit);
 	config->actionOnLevelExceeded = std::stoi(action);
 	config->banDuration = std::stoi(banDuration);
 	config->actionReason = std::string(actionReason);
+	config->enableLog = std::stoi(enableLog);
 }
 
 void saveConfig()
@@ -147,6 +150,7 @@ void saveConfig()
 	WritePrivateProfileString("Config", "action", std::to_string(config->actionOnLevelExceeded).c_str(), configFile.c_str());
 	WritePrivateProfileString("Config", "banDuration", std::to_string(config->banDuration).c_str(), configFile.c_str());
 	WritePrivateProfileString("Config", "actionReason", config->actionReason.c_str(), configFile.c_str());
+	WritePrivateProfileString("Config", "enableLog", std::to_string(config->enableLog).c_str(), configFile.c_str());
 }
 
 int ts3plugin_init() {
@@ -230,6 +234,15 @@ static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, c
 #define CREATE_MENU_ITEM(a, b, c, d) (*menuItems)[n++] = createMenuItem(a, b, c, d);
 #define END_CREATE_MENUS (*menuItems)[n++] = NULL; assert(n == sz);
 
+void ReplaceString(std::string& subject, const std::string& search,
+	const std::string& replace) {
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos) {
+		subject.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+}
+
 
 enum {
 	MENU_ID_GLOBAL_1 = 1,
@@ -286,15 +299,6 @@ const char* ts3plugin_keyPrefix() {
 	return NULL;
 }
 
-void ReplaceString(std::string& subject, const std::string& search,
-	const std::string& replace) {
-	size_t pos = 0;
-	while ((pos = subject.find(search, pos)) != std::string::npos) {
-		subject.replace(pos, search.length(), replace);
-		pos += replace.length();
-	}
-}
-
 void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, anyID clientID, short * samples, int sampleCount, int channels)
 {
 	if (!config->enabled)
@@ -330,8 +334,11 @@ void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, an
 	ReplaceString(kickReason, std::string("{limit}"), std::to_string(config->limit));
 
 	//Log cuz maybe wants this as an api or smth
-	std::string logMessage = std::to_string(clientID) + ";" + std::to_string(highestSample); //we could use sprintf but im too lazy to allocate memory and stuff so use dynamic structures
-	ts3Functions.logMessage(logMessage.c_str(), LogLevel_DEBUG, "VolumeLeveler", serverConnectionHandlerID);
+	if (config->enableLog)
+	{
+		std::string logMessage = std::to_string(clientID) + ";" + std::to_string(highestSample); //we could use sprintf but im too lazy to allocate memory and stuff so use dynamic structures
+		ts3Functions.logMessage(logMessage.c_str(), LogLevel_DEBUG, "VolumeLeveler", serverConnectionHandlerID);
+	}
 
 	//Action on Level Exceeded
 	switch (config->actionOnLevelExceeded)
