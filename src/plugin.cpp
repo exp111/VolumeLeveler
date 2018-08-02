@@ -244,9 +244,11 @@ void ReplaceString(std::string& subject, const std::string& search,
 }
 
 
-enum {
+enum : int
+{
 	MENU_ID_GLOBAL_1 = 1,
 	MENU_ID_GLOBAL_2 = 2,
+	MENU_ID_CLIENT_1,
 	MENU_ID_MAX
 };
 
@@ -255,6 +257,7 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	BEGIN_CREATE_MENUS(MENU_ID_MAX - 1); //Needs to be correct
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_1, "Enable/Disable", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_2, "Change Limit", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_1, "Toggle Whitelist", "");
 	END_CREATE_MENUS;
 
 	*menuIcon = (char*)malloc(PLUGIN_MENU_BUFSZ * sizeof(char));
@@ -267,7 +270,8 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 	switch (type) {
 	case PLUGIN_MENU_TYPE_GLOBAL:
 		/* Channel contextmenu item was triggered. selectedItemID is the channelID of the selected channel */
-		switch (menuItemID) {
+		switch (menuItemID) 
+		{
 		case MENU_ID_GLOBAL_1:
 			config->enabled = !config->enabled;
 			if (config->enabled)
@@ -282,6 +286,24 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 			break;
 		}
 		break;
+	case PLUGIN_MENU_TYPE_CLIENT:
+		switch (menuItemID)
+		{
+		case MENU_ID_CLIENT_1:
+			if (find(config->whitelist.begin(), config->whitelist.end(), selectedItemID) == config->whitelist.end())
+			{
+				config->whitelist.push_back(selectedItemID);
+				ts3Functions.printMessageToCurrentTab("Added to Whitelist.");
+			}
+			else
+			{
+				config->whitelist.erase(remove(config->whitelist.begin(), config->whitelist.end(), selectedItemID), config->whitelist.end());
+				ts3Functions.printMessageToCurrentTab("Removed from Whitelist.");
+			}
+			break;
+		default:
+			break;
+		}
 	default:
 		break;
 	}
@@ -302,6 +324,9 @@ const char* ts3plugin_keyPrefix() {
 void ts3plugin_onEditPlaybackVoiceDataEvent(uint64 serverConnectionHandlerID, anyID clientID, short * samples, int sampleCount, int channels)
 {
 	if (!config->enabled)
+		return;
+
+	if (find(config->whitelist.begin(), config->whitelist.end(), clientID) != config->whitelist.end()) //is whitelisted?
 		return;
 
 	int count = sampleCount * channels;
