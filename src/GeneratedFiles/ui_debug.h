@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'debug.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.3
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -46,8 +46,8 @@ public:
 
     void retranslateUi(QWidget *debug)
     {
-        debug->setWindowTitle(QApplication::translate("debug", "Form", Q_NULLPTR));
-        closeButton->setText(QApplication::translate("debug", "Close", Q_NULLPTR));
+        debug->setWindowTitle(QApplication::translate("debug", "Form", nullptr));
+        closeButton->setText(QApplication::translate("debug", "Close", nullptr));
     } // retranslateUi
 
 };

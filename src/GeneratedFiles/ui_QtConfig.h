@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'QtConfig.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.3
+** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -66,6 +66,11 @@ public:
         limitBox->setMaximum(20000);
         limitBox->setSingleStep(10);
         actionCombo = new QComboBox(QtConfig);
+        actionCombo->addItem(QString());
+        actionCombo->addItem(QString());
+        actionCombo->addItem(QString());
+        actionCombo->addItem(QString());
+        actionCombo->addItem(QString());
         actionCombo->setObjectName(QStringLiteral("actionCombo"));
         actionCombo->setGeometry(QRect(20, 130, 121, 22));
         actionReasonLine = new QLineEdit(QtConfig);
@@ -91,22 +96,20 @@ public:
 
     void retranslateUi(QWidget *QtConfig)
     {
-        QtConfig->setWindowTitle(QApplication::translate("QtConfig", "Volume Leveler", Q_NULLPTR));
-        acepptButton->setText(QApplication::translate("QtConfig", "Accept", Q_NULLPTR));
+        QtConfig->setWindowTitle(QApplication::translate("QtConfig", "Volume Leveler", nullptr));
+        acepptButton->setText(QApplication::translate("QtConfig", "Accept", nullptr));
 #ifndef QT_NO_TOOLTIP
-        enableBox->setToolTip(QApplication::translate("QtConfig", "<html><head/><body><p><span style=\" font-weight:600;\">shit</span></p></body></html>", Q_NULLPTR));
+        enableBox->setToolTip(QApplication::translate("QtConfig", "<html><head/><body><p><span style=\" font-weight:600;\">shit</span></p></body></html>", nullptr));
 #endif // QT_NO_TOOLTIP
-        enableBox->setText(QApplication::translate("QtConfig", "Enable", Q_NULLPTR));
-        cancelButton->setText(QApplication::translate("QtConfig", "Cancel", Q_NULLPTR));
-        actionCombo->clear();
-        actionCombo->insertItems(0, QStringList()
-         << QApplication::translate("QtConfig", "Do nothing", Q_NULLPTR)
-         << QApplication::translate("QtConfig", "Mute", Q_NULLPTR)
-         << QApplication::translate("QtConfig", "Kick from Channel", Q_NULLPTR)
-         << QApplication::translate("QtConfig", "Kick from Server", Q_NULLPTR)
-         << QApplication::translate("QtConfig", "Ban from Server", Q_NULLPTR)
-        );
-        enableLogBox->setText(QApplication::translate("QtConfig", "Log", Q_NULLPTR));
+        enableBox->setText(QApplication::translate("QtConfig", "Enable", nullptr));
+        cancelButton->setText(QApplication::translate("QtConfig", "Cancel", nullptr));
+        actionCombo->setItemText(0, QApplication::translate("QtConfig", "Do nothing", nullptr));
+        actionCombo->setItemText(1, QApplication::translate("QtConfig", "Mute", nullptr));
+        actionCombo->setItemText(2, QApplication::translate("QtConfig", "Kick from Channel", nullptr));
+        actionCombo->setItemText(3, QApplication::translate("QtConfig", "Kick from Server", nullptr));
+        actionCombo->setItemText(4, QApplication::translate("QtConfig", "Ban from Server", nullptr));
+
+        enableLogBox->setText(QApplication::translate("QtConfig", "Log", nullptr));
     } // retranslateUi
 
 };
